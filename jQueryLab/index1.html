@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/jquery-icon.png" />
+  <title>jQuery task1</title>
+</head>
+<body>
+  <from>
+    <input name="email" id="email" placeholder="email"/><br />
+    <span style="color: red;" id='email_error'>ERROR</span><br />
+    <input name="name" id="name" placeholder="name"/><br />
+    <span style="color: red;" id='name_error'>ERROR</span><br />
+    <input name="message" id="message" placeholder="message"/><br />
+    <span style="color: red;" id='message_error'>ERROR</span><br />
+
+    <button id="send" >Send</button>
+
+  </from>
+</body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(function() {
+
+      const dataToBeSent = {}
+
+      $('#send').on('click', () => {
+        if(error_message || error_name || error_email || Object.keys(dataToBeSent).length === 0) {
+          alert('Please check your spelling.')
+          return
+        }
+        else
+        $.ajax({
+          type: 'POST',
+          url: '/api/posts',
+          dataType: 'json',
+          data: dataToBeSent,
+          success: () => {
+            alert('message has been sent')
+          },
+          
+        })
+      })
+
+      $('#email_error').hide()
+      $('#name_error').hide()
+      $('#message_error').hide()
+
+      let error_email = false
+      let error_name = false
+      let error_message = false
+
+      $('#email').focusout(() => {
+        if(!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/.test($('#email').val())){
+          $('#email_error').show()
+          error_email = true
+        }else {
+          error_email = false
+          $('#email_error').hide()
+          dataToBeSent.email = $('#email').val()
+        }
+      })
+      $('#name').focusout(() => {
+        if($('#name').val().length == 0){
+          $('#name_error').show()
+          error_name = true
+        }else {
+          error_name = false
+          $('#name_error').hide()
+          dataToBeSent.name = $('#name').val()
+        }
+      })
+      $('#message').focusout(() => {
+        if($('#message').val().length == 0){
+          error_message = true
+          $('#message_error').show()
+        }else {
+          error_message = false
+          $('#message_error').hide()
+          dataToBeSent.message = $('#message').val()
+        }
+      })
+    })
+  </script>
+</html>

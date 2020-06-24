@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/jquery-icon.png" />
+  <style>
+    body {
+      background-color: #f1f4f6;
+      font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+    .timer {
+  position: absolute;
+  color: #7c9b96;
+  width: 200px;
+  left: 50%;
+  top: 50%;
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  background-color: #f1f4f6;
+  box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8), 6px 6px 10px rgba(0, 0, 0, 0.11);
+}
+
+.screen {
+  user-select: none;
+  border-radius: 10px;
+  background-color: #f1f4f6;
+  font-size: 50px;
+  text-align: center;
+  width: 100%;
+  box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8), 6px 6px 10px rgba(0, 0, 0, 0.11);
+}
+
+.buttons {
+  color: #878fa7;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons > * {
+  color: #878fa7;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+  border-radius: 10px;
+  background: none;
+  border: none;
+  shadow: none;
+  padding: 15px;
+  width: auto;
+  background-color: #f1f4f6;
+  box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8), 6px 6px 10px rgba(0, 0, 0, 0.11);
+  box-sizing: border-box;
+}
+
+button:active {
+  box-shadow: inset 6px 6px 10px rgba(0, 0, 0, 0.07), inset -4px -4px 20px #FFFFFF;
+}
+
+button:focus {
+  outline: none;
+  /* border: 1px black solid; */
+  padding: 14px;
+}
+
+  </style>
+  <title>jQuery task3</title>
+</head>
+<body>
+  <div class="container">
+    <div class="timer">
+      <div class="screen">00:00</div>
+      <div class="buttons">
+        <button id='GO'>GO/STOP</button>
+        <button id='RESET'>RESET</button>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    
+    // state
+    var id
+    var seconds = 0
+    var minutes = 0
+    var isStill = true
+
+    $('#GO').on('click', () => {
+
+      // if condition met --> pause the timer in stop executing the function
+      if((seconds !== 0 || minutes !== 0) && !isStill){
+        isStill = true
+        clearInterval(id)
+        return
+      }
+
+      // indicate clock is ticking
+      isStill = false
+      id = setInterval(function(){
+        let minutesStr
+        let secondsStr
+        seconds++
+        if(seconds==60) {
+          minutes++
+          seconds = 0
+        }
+
+        // format properly
+        secondsStr = (seconds < 10 ? "0" : "") + seconds
+        minutesStr = (minutes < 10 ? "0" : "") + minutes
+        
+        var currentTimeString = minutesStr + ":" + secondsStr
+        $(".screen").html(currentTimeString)
+      },1000)
+    })
+    $('#RESET').on('click', () => {
+      isStill = true
+      clearInterval(id)
+      seconds = 0
+      minutes = 0
+      $(".screen").html('00:00')
+    })
+  })
+</script>
+</html>
